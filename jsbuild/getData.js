@@ -1,52 +1,61 @@
+const { Board, Led, Relay , Servo} = require("johnny-five")
+const board = new Board({ port: "/dev/ttyUSB0" })
 const db = require('./config/db')
-const five = require("johnny-five")
-const arduino = new five.Board
-// const SerialPort = require('serialport').SerialPort
-// const port = new SerialPort("/dev/ttyUSB0")
 
-const SerialPort = require('serialport')
-const Readline = require('@serialport/parser-readline')
-const port = new SerialPort("/dev/ttyUSB0", { baudRate: 9600 })
-const parser = new Readline()
-port.pipe(parser)
+board.on("ready", function () {
+    let relay = new Relay(10);
+    const servo = new Servo({
+        pin: 8,
+        startAt: 90,
+        fps : 1000,
+        center : true
+    });
+    // relay.on()
 
-parser.on('data', line => console.log(`> ${line}`))
+    db.collection("lamp")
+        .where("lampu", "==", 1)
+        .onSnapshot((data) => {
+            // let sensor = []
+            // let status = data[0].data().status
+            let obj = {}
+            data.forEach((doc) => {
+                obj = {
+                    id: doc.id,
+                    status: doc.data().status
+                }
+            })
+            console.log("==========")
+            console.log(obj.status)
+            if (obj.status) {
+                relay.off()
+            }
+            else {
+                relay.on()
+            }
+            // console.log(status)
 
-port.write("f",(err)=>{
-    if(err){
-        console.log(err)
-    }
-    else{
-        console.log("berhasil")
-    }
+            // console.log(sensor)
+        })
+    this.repl.inject({
+        relay: relay
+    });
+    db.collection("door")
+        .where("door", "==", 1)
+        .onSnapshot((data) => {
+            let obj = {}
+            data.forEach((doc) => {
+                obj = {
+                    id: doc.id,
+                    status: doc.data().status
+                }
+            })
+            console.log(obj)
+            if(obj.status){
+                servo.to(180)
+            }
+            else { 
+                servo.to(90)
+            }
+        })
 })
-// var SerialPort = require("serialport").SerialPort;
-// var serialport = new SerialPort("/dev/tty.usbmodem1421");
-// serialport.on('open', function(){
-    //   console.log('Serial Port Opend');
-    //   serialport.on('data', function(data){
-//       console.log(data[0]);
-//   });
-// });
 
-// db.collection("sensor")
-// .onSnapshot((data) => {
-//     let sensor = []
-//         data.forEach((doc) => {
-//             let obj = {
-//                 id: doc.id,
-//                 temperature: doc.data().temperature,
-//                 humidity: doc.data().humidity
-//             }
-//             console.log('jalank query snapshot')
-//             port.write("1")
-//             // port.on('data', ()=>{
-//             //     console.log("serial port open")
-//             //     port.on('data',(ob)=>{
-//             //         console.log(data)
-//             //     })
-//             // })
-//             // sensor.push(obj)
-//         })
-//         console.log(sensor)
-//     })
