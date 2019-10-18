@@ -46,12 +46,24 @@ board.on("ready", function () {
             data.forEach((doc) => {
                 obj = {
                     id: doc.id,
+                    door : doc.data(),
                     status: doc.data().status
                 }
             })
-            console.log(obj)
+            console.log(obj.id)
             if(obj.status){
                 servo.to(180)
+                setTimeout(()=>{
+                    db.collection("door").doc(obj.id)
+                    .update({status : false})
+                    .then((success)=>{
+                        console.log("success")
+                    })
+                    .catch(err=>{
+                        console.log(err.Message)
+                    })
+                    
+                },2000)
             }
             else { 
                 servo.to(90)
@@ -59,3 +71,18 @@ board.on("ready", function () {
         })
 })
 
+
+
+// db.collection('passwordData').doc(id)
+//         .update(updatedPass)
+//         .then((success)=>{
+//             // console.log(success)
+//             toast.success("successfully edited password")
+//             dispatch({type : "edit", data : {isLoading : false}})
+//         })
+//         .catch(error=>{
+//             // console.log(err)
+//             const errorMessage = error.Message
+//             toast.error(errorMessage)
+//             dispatch({type : "edit", data : {isLoading : false}})
+//         })
