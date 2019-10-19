@@ -9,9 +9,12 @@ board.on("ready", () => {
     center : true
 });
 // servo.sweep()
-  servo.to(180)
-  
-  servo.to(90)
+servo.min()
+servo.max()
+//   servo.to(270)
+//   servo.to(50)
+//   servo.to
+//   servo.to(0)
 //   let lap = 0;
 
 //   servo.sweep().on("sweep:full", ()=>{
