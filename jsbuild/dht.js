@@ -12,57 +12,70 @@ parser.on('data', line => {
     let sensor = line.split(',')
 
     // let light = sensor[0] < 100 ? true : false
-    console.log(sensor[0])
-    let light = sensor[0] < 100 ? true : false
+    let light = sensor[0] < 300 ? true : false
     let humidity = Math.floor(Number(sensor[1]))
     let temperature = Math.floor(Number(sensor[2]))
+    
+    console.log(`${light} >><< ${sensor[0]}`)
+    console.log(humidity)
+    console.log(temperature)
 
-    // db.collection("rooms").doc("SubCaSYY2gVJSpQtesQG")
-    //     .update({ light })
-    //     .then(() => {
-    //         console.log(`${light}`)
-    //     })
-    //     .catch(err => {
-    //         console.log(err.Message)
-    //     })
-    // console.log(light)
-    // console.log(humidity)
-    // console.log(temperature)
-    setTimeout(() => {
+    db.collection("lamps")
+    .doc("zxkQKGrgpnOIPIfIhRg8")
+    .get()
+    .then(doc=>{
+        
+        const {day, dayAuto, night, status, nightAuto} = doc.data()
 
-        // db.collection("rooms")
-        //     .doc("SubCaSYY2gVJSpQtesQG")
-        //     .onSnapshot((data) => {
-        //         if (data.data().light !== light) {
-        //             db.collection("rooms")
-        //                 .doc("SubCaSYY2gVJSpQtesQG")
-        //                 .update({ light })
-        //                 .then(() => {
-        //                     console.log(`${light}`)
-        //                 })
-        //                 .catch(err => {
-        //                     console.log(err.Message)
-        //                 })
-        //         }
-        //     })
+        if (day && light){
+            if(dayAuto && status){
+                console.log("do nothing")
+                // db.collection("lamps").doc("zxkQKGrgpnOIPIfIhRg8")
+                // .update({status})
+            }
+            else if(dayAuto && !status){
+                db.collection("lamps")
+                .doc("zxkQKGrgpnOIPIfIhRg8")
+                .update({status : true})
+                .then(()=>console.log("update status jadi true dan nyala"))
+                .catch(err=>console.log(err.Message))
+            }
+            else if(!dayAuto && status){
+                db.collection("lamps")
+                .doc("zxkQKGrgpnOIPIfIhRg8")
+                .update({status : false})
+                .then(()=> console.log("update status jadi false dan dayAuto false"))
+            }
+            
+        }
+        if(night && !light){
+            if(nightAuto && status){
+                console.log("do nothing ketika night auto true dan status true")
+            }
+            else if(nightAuto && !status){
+                db.collection("lamps")
+                .doc("zxkQKGrgpnOIPIfIhRg8")
+                .update({status : true})
+                .then(()=>console.log("update status jadi true dan nyala ketika nightauto true"))
+                .catch(err=>console.log(err.Message))
+            }
+            else if(!nightAuto && status){
+                db.collection("lamps")
+                .doc("zxkQKGrgpnOIPIfIhRg8")
+                .update({status : false})
+                .then(()=> console.log("update status jadi false dan ketika nightAuto false"))
+                .catch(err=>console.log(err.Message))
+            }
+        }
+    })
 
-        db.collection("rooms")
-            .doc("SubCaSYY2gVJSpQtesQG")
-            .update({ light })
-            .then(() => {
-                console.log(`${light}`)
-            })
-            .catch(err => {
-                console.log(err.Message)
-            })
 
-        db.collection("sensors").doc("CzVPfgmXxewojSG5j0WY")
-            .update({ humidity, temperature })
-            .then(() => {
-                // console.log('update berhasil')
-            })
-            .catch(err => {
-                console.log(err.Message)
-            })
-    }, 1500)
+    db.collection("sensors").doc("CzVPfgmXxewojSG5j0WY")
+        .update({light, humidity, temperature })
+        .then(() => {
+            // console.log('update berhasil')
+        })
+        .catch(err => {
+            console.log(err.Message)
+        })
 })

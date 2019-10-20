@@ -10,7 +10,14 @@ firebase.initializeApp({
   projectId: "homi-fi-f7ccc"
 })
 
+// firebase.initializeApp({
+//   apiKey: "AIzaSyBAgMvaBW6R88R6fN4JuT9Jg9X9nO4ghRk",
+//   authDomain: "quizilla-c8161.firebaseapp.com",
+//   projectId: "quizilla-c8161"
+// })
+
 module.exports = firebase
 // export const auth = firebase.auth()
 // export const db = firebase.firestore() 
+
 
