@@ -54,10 +54,10 @@ void loop() {
   float f = dht.readTemperature(true);
   value = analogRead(photoresistor);
   // Check if any reads failed and exit early (to try again).
-  if (isnan(h) || isnan(t) || isnan(f)) {
-    Serial.println(F("Failed to read from DHT sensor!"));
-    return;
-  }
+//  if (isnan(h) || isnan(t) || isnan(f)) {
+//    Serial.println(F("Failed to read from DHT sensor!"));
+//    return;
+//  }
 
   // Compute heat index in Fahrenheit (the default)
   float hif = dht.computeHeatIndex(f, h);
