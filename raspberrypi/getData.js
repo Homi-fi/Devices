@@ -4,23 +4,56 @@ const db = require('./config/db')
 
 
 board.on("ready", function () {
-    const lampRelay = new Relay(10);
+    const lampRelay1 = new Relay(10);
+    const lampRelay2 = new Relay(7)
     const doorRelay = new Relay(4)
 
+
+    // db.collection("lamps")
+    // .doc("zxkQKGrgpnOIPIfIhRg8")
+    //     .onSnapshot((lamps) => {
+
+    //         console.log(lamps.data())
+
+    //         let {status} = lamps.data()
+
+    //         if (status) {
+    //             lampRelay1.off() // lampu menyala ketika status true
+    //         }
+    //         else {
+    //             lampRelay1.on() // lampu mati ketika status false
+    //         }
+    //     })
+
     db.collection("lamps")
-    .doc("zxkQKGrgpnOIPIfIhRg8")
-        .onSnapshot((lamps) => {
-
-            console.log(lamps.data())
-
-            let {status} = lamps.data()
-
-            if (status) {
-                lampRelay.off() // lampu menyala ketika status true
-            }
-            else {
-                lampRelay.on() // lampu mati ketika status false
-            }
+        .onSnapshot((data) => {    
+            data.forEach((doc)=>{
+                
+                // console.log(doc.data())
+                const {status,name} = doc.data()
+                if(name==="Lamp 1"){
+                    if (status){
+                        lampRelay1.off()
+                        console.log("lampu 1 nyala")
+                    }
+                    else{
+                        lampRelay1.on()
+                        console.log("lampu 1 mati")
+                    }
+                    // console.log("lampu 1 ny")
+                }
+                else{
+                    if (status){
+                        lampRelay2.off()
+                        console.log("lampu 2 nyala")
+                    }
+                    else{
+                        lampRelay2.on()
+                        console.log("lampu 2 mati")
+                    }
+                    // status ? lampRelay2.off() : lampRelay2.on()
+                }
+            })
         })
 
     db.collection("doors")
@@ -48,7 +81,8 @@ board.on("ready", function () {
             }
         })
     this.repl.inject({
-        lampRelay,
+        lampRelay1,
+        lampRelay2,
         doorRelay
     });
 })
