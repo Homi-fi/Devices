@@ -1,6 +1,6 @@
 const SerialPort = require('serialport')
 const Readline = require('@serialport/parser-readline')
-const port = new SerialPort("/dev/ttyUSB1", { baudRate: 9600 })
+const port = new SerialPort("/dev/ttyUSB0", { baudRate: 9600 })
 const db = require('./config/db')
 const parser = new Readline()
 
@@ -14,10 +14,12 @@ parser.on('data', line => {
     let light = sensor[0] < 300 ? true : false
     let humidity = Math.floor(Number(sensor[1]))
     let temperature = Math.floor(Number(sensor[2]))
+    let bell = sensor[3] == 1 ? true : false
 
     console.log(`${light} >><< ${sensor[0]}`)
     console.log(humidity)
     console.log(temperature)
+    console.log(bell)
 
     db.collection("lamps")
         .get()
@@ -76,7 +78,7 @@ parser.on('data', line => {
         })
 
     db.collection("sensors").doc("CzVPfgmXxewojSG5j0WY")
-        .update({ light, humidity, temperature })
+        .update({ light, humidity, temperature, bell })
         .then(() => {
             // console.log('update berhasil')
         })
