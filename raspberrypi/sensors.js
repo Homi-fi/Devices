@@ -80,7 +80,7 @@ parser.on('data', line => {
     db.collection("sensors").doc("CzVPfgmXxewojSG5j0WY")
         .update({ light, humidity, temperature, bell })
         .then(() => {
-            // console.log('update berhasil')
+            console.log('update berhasil')
         })
         .catch(err => {
             console.log(err.Message)
