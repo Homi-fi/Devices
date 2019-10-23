@@ -35,7 +35,7 @@ parser.on('data', line => {
 
                 if (day && light) {
                     if (dayAuto && status) {
-                        console.log("do nothing")
+                        console.log("do nothing") 
                         // db.collection("lamps").doc("zxkQKGrgpnOIPIfIhRg8")
                         // .update({status})
                     }
