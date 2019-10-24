@@ -14,10 +14,12 @@ parser.on('data', line => {
     let light = sensor[0] < 300 ? true : false
     let humidity = Math.floor(Number(sensor[1]))
     let temperature = Math.floor(Number(sensor[2]))
+    let bell = sensor[3] == 1 ? true : false
 
     console.log(`${light} >><< ${sensor[0]}`)
     console.log(humidity)
     console.log(temperature)
+    console.log(bell)
 
     db.collection("lamps")
         .get()
@@ -33,7 +35,7 @@ parser.on('data', line => {
 
                 if (day && light) {
                     if (dayAuto && status) {
-                        console.log("do nothing")
+                        console.log("do nothing") 
                         // db.collection("lamps").doc("zxkQKGrgpnOIPIfIhRg8")
                         // .update({status})
                     }
@@ -76,9 +78,9 @@ parser.on('data', line => {
         })
 
     db.collection("sensors").doc("CzVPfgmXxewojSG5j0WY")
-        .update({ light, humidity, temperature })
+        .update({ light, humidity, temperature, bell })
         .then(() => {
-            // console.log('update berhasil')
+            console.log('update berhasil')
         })
         .catch(err => {
             console.log(err.Message)
